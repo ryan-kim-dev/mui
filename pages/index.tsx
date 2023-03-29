@@ -11,7 +11,12 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Canvas>
+      <Canvas
+        camera={{
+          fov: 64,
+          position: [2.3, 1.5, 2.3],
+        }}
+      >
         <ThreeRenderView />
       </Canvas>
     </>

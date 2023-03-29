@@ -1,13 +1,15 @@
 import React from 'react';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, ScrollControls } from '@react-three/drei';
 import { Office } from './model/Office';
 
 const ThreeRenderView = () => {
   return (
     <>
       <ambientLight intensity={1} />
-      <OrbitControls />
-      <Office />
+      <OrbitControls enableZoom={false} />
+      <ScrollControls pages={3} damping={0.25}>
+        <Office />
+      </ScrollControls>
     </>
   );
 };

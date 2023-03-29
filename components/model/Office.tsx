@@ -4,9 +4,11 @@ Command: npx gltfjsx@6.1.4 -t public/models/WawaOffice.glb
 */
 
 import * as THREE from 'three';
-import React, { useRef } from 'react';
-import { useGLTF } from '@react-three/drei';
+import React, { useLayoutEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { useGLTF, useScroll } from '@react-three/drei';
 import { GLTF } from 'three-stdlib';
+import { useFrame } from '@react-three/fiber';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -21,10 +23,37 @@ type GLTFResult = GLTF & {
   };
 };
 
+export const FLOOR_HEIGHT = 2.3;
+export const NB_FLOORS = 3;
+
 export function Office(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF('./models/WawaOffice.glb') as GLTFResult;
+  const ref: any = useRef();
+  const tl: any = useRef();
+
+  const scroll = useScroll();
+
+  useFrame(() => {
+    tl.current.seek(scroll.offset * tl.current.duration());
+  });
+
+  useLayoutEffect(() => {
+    tl.current = gsap.timeline();
+
+    // 수직방향 애니메이션 지정
+    ref.current &&
+      tl.current.to(
+        ref.current.position,
+        {
+          duration: 2,
+          y: -FLOOR_HEIGHT * (NB_FLOORS - 1),
+        },
+        0
+      );
+  }, []);
+
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} ref={ref}>
       <mesh geometry={nodes['01_office'].geometry} material={materials['01']} />
       <mesh
         geometry={nodes['02_library'].geometry}
